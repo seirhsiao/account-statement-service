@@ -43,6 +43,6 @@ mvn test
 - **Type safety**: Automatic parameter validation
 - **Error documentation**: Clear response status definitions
 
-**5. Real-world simulation of data manipulation **
+**5. Real-world simulation of data manipulation**
 - **pageable for transactions**: Truly implement paginated queries
 - **Table associations**: account table and transactions table One-to-many associative design

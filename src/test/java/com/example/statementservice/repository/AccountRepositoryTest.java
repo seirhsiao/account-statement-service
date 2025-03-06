@@ -1,8 +1,9 @@
 package com.example.statementservice.repository;
 
 import com.example.statementservice.model.Account;
-import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
@@ -12,7 +13,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
         "spring.datasource.url=jdbc:h2:mem:testdb",
         "spring.jpa.hibernate.ddl-auto=create-drop"
 })
-@TestMethodOrder(OrderAnnotation.class)
 public class AccountRepositoryTest {
     @Autowired
     private AccountRepository accountRepository;
@@ -22,20 +22,16 @@ public class AccountRepositoryTest {
     @BeforeEach
     void setUp() {
         // Initialize test data before each test method
-        account = new Account("000009093817625");
+        account = new Account("000009093817626");
     }
 
-    @Order(1)
     @Test
-    void testAdd() {
-        accountRepository.save(account);
-    }
-
-    @Order(2)
-    @Test
-    public void testFindByAccountNumber() {
-        Account result = accountRepository.findByAccountNumber("000009093817625");
+    void testFindByAccountNumber() {
+        Account result = accountRepository.save(account);
         assertNotNull(result);
+
+        Account queryResult = accountRepository.findByAccountNumber("000009093817626");
+        assertNotNull(queryResult);
     }
 
     @AfterEach

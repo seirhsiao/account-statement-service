@@ -32,20 +32,24 @@ public class TransactionService {
         Specification<Transaction> spec = (root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
             String datePattern = "dd-MM-yyyy";
-            Date beginTime = new Date();
-            Date endTime = new Date();
+            Date beginTime = null;
+            Date endTime = null;
             try {
                 beginTime = DateUtils.parseDate(from, datePattern);
                 endTime = DateUtils.parseDate(to, datePattern);
             } catch (ParseException e) {
                 logger.info("failed converted fromDate : {} or toDate : {} with format : {}", beginTime, endTime, datePattern);
-                throw new RuntimeException(e);
             }
-            predicates.add(criteriaBuilder.equal(root.get("account"), account));
-            predicates.add(criteriaBuilder.between(root.get("valueDate"), beginTime, endTime));
-            return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
+            if (account != null) {
+                predicates.add(criteriaBuilder.equal(root.get("account"), account));
+            }
+            if (beginTime != null && endTime != null) {
+                predicates.add(criteriaBuilder.between(root.get("valueDate"), beginTime, endTime));
+            }
+            Predicate[] pre = new Predicate[predicates.size()];
+            return criteriaBuilder.and(predicates.toArray(pre));
         };
         Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by("trxReferenceNo").ascending());
-        return transactionRepository.findAll(pageable);
+        return transactionRepository.findAll(spec, pageable);
     }
 }

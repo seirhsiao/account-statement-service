@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Objects;
 
 @Entity
 public class Transaction implements Serializable {
@@ -25,8 +26,8 @@ public class Transaction implements Serializable {
     @Column(name = "TRAN_CURRENCY")
     private String tranCurrency;
 
-    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.REFRESH}, optional = false)
-    @JoinColumn(name = "account_number")
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, optional = true)
+    @JoinColumn(name = "account_number", nullable = false)
     @JsonIgnore
     private Account account;
 
@@ -105,5 +106,17 @@ public class Transaction implements Serializable {
 
     public void setAccount(Account account) {
         this.account = account;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Transaction that = (Transaction) o;
+        return Objects.equals(trxReferenceNo, that.trxReferenceNo);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(trxReferenceNo);
     }
 }

@@ -1,32 +1,27 @@
 package com.example.statementservice.model;
 
+
 import jakarta.persistence.*;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 public class Account implements Serializable {
-
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
     @Column(name = "ACCOUNT_NUMBER")
     private String accountNumber;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "account_number", referencedColumnName = "account_number")
-    private List<Transaction> transactions;
+    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
+    private List<Transaction> transactions = new ArrayList<>();
 
-    public Account () {}
-    public Account (String accountNumber) {this.accountNumber = accountNumber;}
-
-    public Long getId() {
-        return id;
+    public Account() {
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public Account(String accountNumber) {
+        this.accountNumber = accountNumber;
     }
 
     public String getAccountNumber() {
@@ -43,5 +38,17 @@ public class Account implements Serializable {
 
     public void setTransactions(List<Transaction> transactions) {
         this.transactions = transactions;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Account account = (Account) o;
+        return Objects.equals(accountNumber, account.accountNumber);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(accountNumber);
     }
 }

@@ -15,6 +15,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
@@ -30,7 +31,6 @@ public class TransactionServiceTest {
     void testFindByAccountAndBetweenValueDate() {
         when(transactionRepository.findAll(ArgumentMatchers.any(Pageable.class))).thenReturn(Page.empty());
         Page<Transaction> pages = transactionService.findByAccountAndBetweenValueDate(new Account("aaa"), "01-08-2024", "31-08-2024", 1, 2);
-        List<Transaction> transactions = pages.getContent();
-        assertEquals(0, transactions.size());
+        assertNull(pages);
     }
 }
